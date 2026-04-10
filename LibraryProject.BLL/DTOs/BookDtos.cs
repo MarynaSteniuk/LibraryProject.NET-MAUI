@@ -1,29 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace LibraryProject.BLL.DTOs;
 
 public class BookDto
 {
     public int Id { get; set; }
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string Isbn { get; set; } = string.Empty;
     public decimal Price { get; set; }
-    public string AuthorName { get; set; } 
+    public int AuthorId { get; set; }
+    public string AuthorName { get; set; } = string.Empty;
 }
 
 public class CreateBookDto
 {
-    public string Title { get; set; }
+    [Required]
+    [MaxLength(300)]
+    public string Title { get; set; } = string.Empty;
+
+    [Required]
+    [MaxLength(20)]
+    public string Isbn { get; set; } = string.Empty;
+
+    [Required]
+    [Range(0.01, 100000)]
     public decimal Price { get; set; }
-    public int AuthorId { get; set; } 
+
+    [Required]
+    public int AuthorId { get; set; }
 }
 
 public class UpdateBookDto
 {
-    public int Id { get; set; }
-    public string Title { get; set; }
+    [Required]
+    [MaxLength(300)]
+    public string Title { get; set; } = string.Empty;
+
+    [Required]
+    [MaxLength(20)]
+    public string Isbn { get; set; } = string.Empty;
+
+    [Required]
+    [Range(0.01, 100000)]
     public decimal Price { get; set; }
+
+    [Required]
+    public int AuthorId { get; set; }
 }

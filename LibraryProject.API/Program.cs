@@ -1,35 +1,45 @@
+using AutoMapper;
 using LibraryProject.BLL.Profiles;
-using Microsoft.EntityFrameworkCore;
-using LibraryProject.DAL.Repositories;
 using LibraryProject.BLL.Services;
+using LibraryProject.DAL;
+using LibraryProject.DAL.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+// OpenAPI (встроенный, без Swashbuckle)
 builder.Services.AddOpenApi();
-builder.Services.AddDbContext<LibraryProject.DAL.AppDbContext>(options =>
+
+// База данных
+builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+// AutoMapper
+var mapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile(new MappingProfile());
+});
+
+builder.Services.AddSingleton<IMapper>(mapperConfig.CreateMapper());
+
+// Репозитории и сервисы
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IBookService, BookService>();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
-
+// Scalar UI вместо Swagger UI
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapOpenApi();                  // генерирует /openapi/v1.json
+    app.MapScalarApiReference();       // UI на /scalar/v1
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 app.MapControllers();
 

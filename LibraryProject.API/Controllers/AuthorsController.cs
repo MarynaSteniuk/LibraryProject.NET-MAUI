@@ -1,59 +1,50 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using LibraryProject.BLL.Services;
 using LibraryProject.BLL.DTOs;
-using Microsoft.AspNetCore.Authorization;
-
+using Microsoft.AspNetCore.Authorization; 
 namespace LibraryProject.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class BooksController : ControllerBase
+public class AuthorsController : ControllerBase
 {
-    private readonly IBookService _bookService;
+    private readonly IAuthorService _authorService;
 
-    public BooksController(IBookService bookService)
+    public AuthorsController(IAuthorService authorService)
     {
-        _bookService = bookService;
+        _authorService = authorService;
     }
 
-    // ТУТ ЗАМКА НЕМАЄ — Всі можуть дивитися список книг
+    // ТУТ ЗАМКА НЕМАЄ — Всі можуть дивитися список авторів
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<BookDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<BookDto>>> GetAll()
+    [ProducesResponseType(typeof(IEnumerable<AuthorDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<AuthorDto>>> GetAll()
     {
-        var result = await _bookService.GetAllAsync();
+        var result = await _authorService.GetAllAsync();
         return Ok(result);
     }
 
-    // ТУТ ЗАМКА НЕМАЄ — Всі можуть дивитися конкретну книгу
+    // ТУТ ЗАМКА НЕМАЄ — Всі можуть дивитися конкретного автора
     [HttpGet("{id:int}")]
-    [ProducesResponseType(typeof(BookDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AuthorDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<BookDto>> GetById(int id)
+    public async Task<ActionResult<AuthorDto>> GetById(int id)
     {
-        var result = await _bookService.GetByIdAsync(id);
+        var result = await _authorService.GetByIdAsync(id);
         return result is null ? NotFound() : Ok(result);
     }
 
     [Authorize] // <--- ВІШАЄМО ЗАМОК НА СТВОРЕННЯ
     [HttpPost]
-    [ProducesResponseType(typeof(BookDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(AuthorDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<BookDto>> Create([FromBody] CreateBookDto dto)
+    public async Task<ActionResult<AuthorDto>> Create([FromBody] CreateAuthorDto dto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        try
-        {
-            var result = await _bookService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
+        var result = await _authorService.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
     [Authorize] // <--- ВІШАЄМО ЗАМОК НА ОНОВЛЕННЯ
@@ -61,14 +52,14 @@ public class BooksController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Update(int id, [FromBody] UpdateBookDto dto)
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateAuthorDto dto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         try
         {
-            await _bookService.UpdateAsync(id, dto);
+            await _authorService.UpdateAsync(id, dto);
             return NoContent();
         }
         catch (KeyNotFoundException ex)
@@ -85,7 +76,7 @@ public class BooksController : ControllerBase
     {
         try
         {
-            await _bookService.DeleteAsync(id);
+            await _authorService.DeleteAsync(id);
             return NoContent();
         }
         catch (KeyNotFoundException ex)

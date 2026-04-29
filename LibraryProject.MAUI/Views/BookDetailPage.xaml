@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LibraryProject.MAUI.Views.BookDetailPage"
+             Title="{Binding Title}" 
+             BackgroundColor="#FEF5F1">
+
+    <ScrollView Padding="20">
+        <VerticalStackLayout Spacing="20">
+
+            <Frame BackgroundColor="#FFFFFF" BorderColor="#FBC4AB" CornerRadius="20" Padding="25" HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Назва книги:" FontSize="13" TextColor="#A3918E"/>
+                    <Label Text="{Binding BookTitle}" FontSize="24" FontAttributes="Bold" TextColor="#6D5953"/>
+
+                    <BoxView HeightRequest="1" Color="#FEF5F1" Margin="0,10"/>
+
+                    <Label Text="ISBN:" FontSize="13" TextColor="#A3918E"/>
+                    <Label Text="{Binding Isbn}" FontSize="16" TextColor="#6D5953"/>
+
+                    <Label Text="Ціна:" FontSize="13" TextColor="#A3918E" Margin="0,10,0,0"/>
+                    <Label Text="{Binding Price, StringFormat='{0} грн'}" FontSize="22" FontAttributes="Bold" TextColor="#F8AD9D"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Button Text="Редагувати" Command="{Binding GoToEditCommand}" BackgroundColor="#FBC4AB" TextColor="#6D5953" CornerRadius="12" HeightRequest="55" FontAttributes="Bold"/>
+            <Button Text="Видалити" Command="{Binding DeleteCommand}" BackgroundColor="#E5989B" TextColor="#FFFFFF" CornerRadius="12" HeightRequest="55" FontAttributes="Bold"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

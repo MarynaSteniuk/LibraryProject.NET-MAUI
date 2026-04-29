@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LibraryProject.MAUI.Views.BookFormPage"
+             Title="{Binding Title}" 
+             BackgroundColor="#FEF5F1">
+
+    <ScrollView Padding="20">
+        <VerticalStackLayout Spacing="15">
+
+            <Label Text="Назва книги" TextColor="#6D5953" FontAttributes="Bold" Margin="0,0,0,-5"/>
+            <Entry Text="{Binding BookTitle, Mode=TwoWay}" Placeholder="Наприклад: Гаррі Поттер" BackgroundColor="#FFFFFF" TextColor="#6D5953"/>
+
+            <Label Text="ISBN" TextColor="#6D5953" FontAttributes="Bold" Margin="0,10,0,-5"/>
+            <Entry Text="{Binding Isbn, Mode=TwoWay}" Placeholder="Наприклад: 978-3-16-148410-0" BackgroundColor="#FFFFFF" TextColor="#6D5953"/>
+
+            <Label Text="Ціна (грн)" TextColor="#6D5953" FontAttributes="Bold" Margin="0,10,0,-5"/>
+            <Entry Text="{Binding Price, Mode=TwoWay}" Keyboard="Numeric" Placeholder="0.00" BackgroundColor="#FFFFFF" TextColor="#6D5953"/>
+
+            <Label Text="ID Автора" TextColor="#6D5953" FontAttributes="Bold" Margin="0,10,0,-5"/>
+            <Entry Text="{Binding AuthorId, Mode=TwoWay}" Keyboard="Numeric" Placeholder="1" BackgroundColor="#FFFFFF" TextColor="#6D5953"/>
+
+            <!-- IsEnabled блокує кнопку, поки дані відправляються на сервер -->
+            <Button Text="Зберегти" Command="{Binding SaveCommand}" IsEnabled="{Binding IsNotBusy}" 
+                    BackgroundColor="#F8AD9D" TextColor="#FFFFFF" CornerRadius="12" HeightRequest="55" FontAttributes="Bold" Margin="0,20,0,0"/>
+
+            <Button Text="Скасувати" Command="{Binding CancelCommand}" 
+                    BackgroundColor="#F8EDEB" TextColor="#A3918E" CornerRadius="12" HeightRequest="55" FontAttributes="Bold"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

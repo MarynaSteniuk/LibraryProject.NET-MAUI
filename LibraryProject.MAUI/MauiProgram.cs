@@ -18,14 +18,21 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        // 10.0.2.2 - це адреса localhost для емулятора. 7181 - порт API.
+        string apiUrl = DeviceInfo.Platform == DevicePlatform.Android
+             ? "https://10.0.2.2:7181/"
+             : "https://localhost:7181/";
+
         builder.Services.AddSingleton(new HttpClient
         {
-            BaseAddress = new Uri("https://10.0.2.2:7181/")
+            BaseAddress = new Uri(apiUrl)
         });
-        builder.Services.AddSingleton<LibraryApiService>();
+        builder.Services.AddSingleton<ILibraryApiService, LibraryApiService>();
         builder.Services.AddTransient<BooksViewModel>();
+        builder.Services.AddTransient<BookDetailViewModel>();
+        builder.Services.AddTransient<BookFormViewModel>();
         builder.Services.AddTransient<BooksPage>();
+        builder.Services.AddTransient<BookDetailPage>();
+        builder.Services.AddTransient<BookFormPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

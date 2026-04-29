@@ -1,10 +1,12 @@
-﻿namespace LibraryProject.MAUI
+﻿namespace LibraryProject.MAUI;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+
+        Routing.RegisterRoute(nameof(Views.BookDetailPage), typeof(Views.BookDetailPage));
+        Routing.RegisterRoute(nameof(Views.BookFormPage), typeof(Views.BookFormPage));
     }
 }

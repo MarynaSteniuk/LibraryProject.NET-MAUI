@@ -56,12 +56,16 @@ public class BookFormViewModel : BaseViewModel
         _apiService = apiService;
 
         SaveCommand = new Command(async () => await SaveAsync());
-        CancelCommand = new Command(async () => await Shell.Current.GoToAsync("..")); // Просто повертаємось назад
+        CancelCommand = new Command(async () => await Shell.Current.GoToAsync("..")); 
     }
 
     private async Task LoadBookAsync(int id)
     {
-        if (id == 0)
+        var authors = await _apiService.GetAuthorsAsync();
+        Authors.Clear();
+        foreach (var author in authors) Authors.Add(author);
+
+            if (id == 0)
         {
             Title = "Додати книгу";
             BookTitle = string.Empty;
@@ -82,6 +86,7 @@ public class BookFormViewModel : BaseViewModel
                 Isbn = book.Isbn;
                 Price = book.Price;
                 AuthorId = book.AuthorId;
+                SelectedAuthor = Authors.FirstOrDefault(a => a.Id == book.AuthorId);
             }
         }
         finally
@@ -122,6 +127,19 @@ public class BookFormViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+        }
+    }
+    public System.Collections.ObjectModel.ObservableCollection<AuthorModel> Authors { get; } = new();
+
+    private AuthorModel? _selectedAuthor;
+    public AuthorModel? SelectedAuthor
+    {
+        get => _selectedAuthor;
+        set
+        {
+            _selectedAuthor = value;
+            if (value != null) AuthorId = value.Id;
+            OnPropertyChanged();
         }
     }
 }

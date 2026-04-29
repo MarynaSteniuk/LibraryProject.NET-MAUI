@@ -53,7 +53,12 @@ public class BookDetailViewModel : BaseViewModel
         DeleteCommand = new Command(async () => await DeleteBookAsync());
         GoToEditCommand = new Command(async () => await GoToEditAsync());
     }
-
+    private string _authorName = string.Empty;
+    public string AuthorName
+    {
+        get => _authorName;
+        set { _authorName = value; OnPropertyChanged(); }
+    }
     private async Task LoadBookAsync(int id)
     {
         IsBusy = true;
@@ -65,6 +70,11 @@ public class BookDetailViewModel : BaseViewModel
                 BookTitle = _currentBook.Title;
                 Isbn = _currentBook.Isbn;
                 Price = _currentBook.Price;
+
+                var authors = await _apiService.GetAuthorsAsync();
+                var author = authors.FirstOrDefault(a => a.Id == _currentBook.AuthorId);
+
+                AuthorName = author != null ? author.Name : "Невідомий автор";
             }
         }
         finally

@@ -97,4 +97,16 @@ public class LibraryApiService : ILibraryApiService
             
         }
     }
+    public async Task<IEnumerable<AuthorModel>> GetAuthorsAsync()
+    {
+        try
+        {
+            var result = await _httpClient.GetFromJsonAsync<List<AuthorModel>>("api/Authors");
+            return result ?? new List<AuthorModel>();
+        }
+        catch (Exception)
+        {
+            return new List<AuthorModel>();
+        }
+    }
 }

@@ -9,5 +9,6 @@ public interface ILibraryApiService
     Task<BookModel?> CreateAsync(BookModel item);
     Task UpdateAsync(BookModel item);
     Task DeleteAsync(int id);
-  
+    Task<IEnumerable<AuthorModel>> GetAuthorsAsync();
+
 }

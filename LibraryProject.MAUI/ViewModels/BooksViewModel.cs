@@ -11,6 +11,20 @@ public class BooksViewModel : BaseViewModel
 
     public ObservableCollection<BookModel> Books { get; } = new();
 
+    private List<BookModel> _allBooks = new();
+
+    private string _searchQuery = string.Empty;
+    public string SearchQuery
+    {
+        get => _searchQuery;
+        set
+        {
+            _searchQuery = value;
+            OnPropertyChanged();
+            PerformSearch(); 
+        }
+    }
+
     private BookModel? _selectedBook;
     public BookModel? SelectedBook
     {
@@ -25,7 +39,7 @@ public class BooksViewModel : BaseViewModel
     public ICommand LoadBooksCommand { get; }
     public ICommand GoToDetailsCommand { get; }
     public ICommand GoToAddCommand { get; }
-    public ICommand ToggleFavoriteCommand { get; } 
+    public ICommand ToggleFavoriteCommand { get; }
 
     public BooksViewModel(ILibraryApiService apiService)
     {
@@ -58,7 +72,7 @@ public class BooksViewModel : BaseViewModel
                 await Shell.Current.DisplayAlert("Помилка", "Не вдалося завантажити дані.", "OK");
                 return;
             }
-
+            var authors = await _apiService.GetAuthorsAsync();
             string userEmail = Microsoft.Maui.Storage.Preferences.Default.Get("user_email", string.Empty);
 
             List<int> favoriteIds = new List<int>();
@@ -68,16 +82,46 @@ public class BooksViewModel : BaseViewModel
                 favoriteIds = favoriteBooks.Select(b => b.Id).ToList();
             }
 
-            Books.Clear();
+            _allBooks.Clear();
             foreach (var book in result)
             {
+                var author = authors.FirstOrDefault(a => a.Id == book.AuthorId);
+                book.AuthorName = author != null ? author.Name : "Невідомий автор";
                 book.IsFavorite = favoriteIds.Contains(book.Id);
-                Books.Add(book);
+                _allBooks.Add(book);
             }
+
+            PerformSearch();
         }
         finally
         {
             IsBusy = false;
+        }
+    }
+
+    private void PerformSearch()
+    {
+        if (string.IsNullOrWhiteSpace(SearchQuery))
+        {
+            Books.Clear();
+            foreach (var book in _allBooks)
+            {
+                Books.Add(book);
+            }
+        }
+        else
+        {
+            var lowerQuery = SearchQuery.ToLower();
+            var filteredBooks = _allBooks.Where(b =>
+                (b.Title != null && b.Title.ToLower().Contains(lowerQuery)) ||
+                (b.AuthorName != null && b.AuthorName.ToLower().Contains(lowerQuery))
+            ).ToList();
+
+            Books.Clear();
+            foreach (var book in filteredBooks)
+            {
+                Books.Add(book);
+            }
         }
     }
 
@@ -86,6 +130,7 @@ public class BooksViewModel : BaseViewModel
         if (book == null) return;
         await Shell.Current.GoToAsync($"BookDetailPage?id={book.Id}");
     }
+
     private async Task ToggleFavoriteAsync(BookModel? book)
     {
         if (book == null) return;

@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
 using LibraryProject.MAUI.Models;
 using LibraryProject.MAUI.Services;
 
@@ -25,6 +26,13 @@ public class BookFormViewModel : BaseViewModel
     {
         get => _bookTitle;
         set { _bookTitle = value; OnPropertyChanged(); }
+    }
+
+    private string _description = string.Empty;
+    public string Description
+    {
+        get => _description;
+        set { _description = value; OnPropertyChanged(); }
     }
 
     private string _imageUrl = string.Empty;
@@ -63,7 +71,7 @@ public class BookFormViewModel : BaseViewModel
         _apiService = apiService;
 
         SaveCommand = new Command(async () => await SaveAsync());
-        CancelCommand = new Command(async () => await Shell.Current.GoToAsync("..")); 
+        CancelCommand = new Command(async () => await Shell.Current.GoToAsync(".."));
     }
 
     private async Task LoadBookAsync(int id)
@@ -72,13 +80,15 @@ public class BookFormViewModel : BaseViewModel
         Authors.Clear();
         foreach (var author in authors) Authors.Add(author);
 
-            if (id == 0)
+        if (id == 0)
         {
             Title = "Додати книгу";
             BookTitle = string.Empty;
+            Description = string.Empty; 
             Isbn = string.Empty;
             Price = 0;
             AuthorId = 0;
+            ImageUrl = string.Empty;
             return;
         }
 
@@ -90,6 +100,7 @@ public class BookFormViewModel : BaseViewModel
             if (book != null)
             {
                 BookTitle = book.Title;
+                Description = book.Description ?? string.Empty; 
                 Isbn = book.Isbn;
                 Price = book.Price;
                 AuthorId = book.AuthorId;
@@ -118,6 +129,7 @@ public class BookFormViewModel : BaseViewModel
             {
                 Id = BookId,
                 Title = BookTitle,
+                Description = this.Description, 
                 Isbn = Isbn,
                 Price = Price,
                 AuthorId = AuthorId,
@@ -138,7 +150,8 @@ public class BookFormViewModel : BaseViewModel
             IsBusy = false;
         }
     }
-    public System.Collections.ObjectModel.ObservableCollection<AuthorModel> Authors { get; } = new();
+
+    public ObservableCollection<AuthorModel> Authors { get; } = new();
 
     private AuthorModel? _selectedAuthor;
     public AuthorModel? SelectedAuthor

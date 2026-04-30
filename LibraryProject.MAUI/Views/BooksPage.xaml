@@ -10,10 +10,17 @@
         <ToolbarItem Text="Додати" Command="{Binding GoToAddCommand}"/>
     </ContentPage.ToolbarItems>
 
-    <Grid Padding="15">
-        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="#FBC4AB" HorizontalOptions="Center" VerticalOptions="Center" ZIndex="1"/>
+    <Grid Padding="15" RowDefinitions="Auto, *">
 
-        <CollectionView ItemsSource="{Binding Books}" SelectionMode="None">
+        <Frame Grid.Row="0" Margin="0,0,0,15" Padding="0" CornerRadius="12" BackgroundColor="#FFFFFF" BorderColor="#FBC4AB" HasShadow="False">
+            <SearchBar Placeholder="Пошук за назвою або автором..." 
+                       Text="{Binding SearchQuery}" 
+                       CancelButtonColor="#E5989B"
+                       TextColor="#6D5953"
+                       PlaceholderColor="#A3918E" />
+        </Frame>
+        <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="#FBC4AB" HorizontalOptions="Center" VerticalOptions="Center" ZIndex="1"/>
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Books}" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Frame Margin="0,0,0,12" Padding="15" CornerRadius="15" BackgroundColor="#FFFFFF" BorderColor="#FBC4AB" HasShadow="True">
@@ -27,7 +34,8 @@
                             <Frame Grid.Column="0" WidthRequest="90" HeightRequest="130" CornerRadius="8" Padding="0" BackgroundColor="#F8EDEB" BorderColor="Transparent" IsClippedToBounds="True">
                                 <Grid>
                                     <Label Text="📷" FontSize="35" HorizontalOptions="Center" VerticalOptions="Center" TextColor="#A3918E"/>
-                                    <Image Source="{Binding ImageUrl}" Aspect="AspectFill"/>
+                                    <!-- Змінили AspectFill на AspectFit для ідеального відображення обкладинки -->
+                                    <Image Source="{Binding ImageUrl}" Aspect="AspectFit"/>
                                 </Grid>
                             </Frame>
 

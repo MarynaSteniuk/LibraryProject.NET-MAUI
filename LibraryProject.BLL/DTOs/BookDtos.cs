@@ -6,6 +6,7 @@ public class BookDto
 {
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
+    public string? Description { get; set; }
     public string Isbn { get; set; } = string.Empty;
     public decimal Price { get; set; }
     public int AuthorId { get; set; }
@@ -18,6 +19,9 @@ public class CreateBookDto
     [Required]
     [MaxLength(300)]
     public string Title { get; set; } = string.Empty;
+
+    [MaxLength(2000)]
+    public string? Description { get; set; }
 
     [Required]
     [MaxLength(20)]
@@ -39,6 +43,9 @@ public class UpdateBookDto
     [Required]
     [MaxLength(300)]
     public string Title { get; set; } = string.Empty;
+
+    [MaxLength(2000)]
+    public string? Description { get; set; }
 
     [Required]
     [MaxLength(20)]

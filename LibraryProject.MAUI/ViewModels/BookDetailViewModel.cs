@@ -42,6 +42,13 @@ public class BookDetailViewModel : BaseViewModel
         set { _price = value; OnPropertyChanged(); }
     }
 
+    private string _description = string.Empty;
+    public string Description
+    {
+        get => _description;
+        set { _description = value; OnPropertyChanged(); }
+    }
+
     private string _authorName = string.Empty;
     public string AuthorName
     {
@@ -49,7 +56,6 @@ public class BookDetailViewModel : BaseViewModel
         set { _authorName = value; OnPropertyChanged(); }
     }
 
-    // ДОДАНО: Властивість для відображення картинки
     private string _imageUrl = string.Empty;
     public string ImageUrl
     {
@@ -59,7 +65,6 @@ public class BookDetailViewModel : BaseViewModel
 
     public ICommand DeleteCommand { get; }
 
-    // ВИПРАВЛЕНО: Назву змінено на EditCommand, як у XAML
     public ICommand EditCommand { get; }
 
     public BookDetailViewModel(ILibraryApiService apiService)
@@ -83,6 +88,9 @@ public class BookDetailViewModel : BaseViewModel
                 Isbn = _currentBook.Isbn;
                 Price = _currentBook.Price;
                 ImageUrl = _currentBook.ImageUrl ?? string.Empty;
+                Description = string.IsNullOrWhiteSpace(_currentBook.Description)
+                    ? "Опис для цієї книги поки відсутній."
+                    : _currentBook.Description;
 
                 var authors = await _apiService.GetAuthorsAsync();
                 var author = authors.FirstOrDefault(a => a.Id == _currentBook.AuthorId);

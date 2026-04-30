@@ -21,7 +21,13 @@ public class AuthorsViewModel : BaseViewModel
         Title = "Список авторів";
 
         LoadAuthorsCommand = new Command(async () => await LoadAuthorsAsync());
-        GoToAddCommand = new Command(async () => await Shell.Current.GoToAsync("AuthorFormPage?id=0"));
+        GoToAddCommand = new Command(async () =>
+        {
+            if (IsAdmin)
+                await Shell.Current.GoToAsync("AuthorFormPage?id=0");
+            else
+                await Shell.Current.DisplayAlert("Доступ заборонено", "Тільки адміністратор може додавати авторів.", "ОК");
+        });
         DeleteCommand = new Command<AuthorModel>(async (author) => await DeleteAuthorAsync(author));
     }
 

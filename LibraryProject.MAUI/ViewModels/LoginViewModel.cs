@@ -49,6 +49,8 @@ public class LoginViewModel : BaseViewModel
             if (success)
             {
                 Preferences.Default.Set("user_email", Email);
+                bool isAdmin = Email.ToLower() == "admin@admin.com";
+                Preferences.Default.Set("is_admin", isAdmin);
                 await Shell.Current.GoToAsync("//BooksPage");
             }
             else

@@ -6,7 +6,15 @@
              BackgroundColor="#FEF5F1">
 
     <ScrollView Padding="20">
+        
         <VerticalStackLayout Spacing="20">
+
+            <Frame HeightRequest="300" CornerRadius="15" Padding="0" BackgroundColor="#F8EDEB" BorderColor="Transparent" IsClippedToBounds="True">
+                <Grid>
+                    <Label Text="📷" FontSize="70" HorizontalOptions="Center" VerticalOptions="Center" TextColor="#A3918E"/>
+                    <Image Source="{Binding ImageUrl}" Aspect="AspectFit" />
+                </Grid>
+            </Frame>
 
             <Frame BackgroundColor="#FFFFFF" BorderColor="#FBC4AB" CornerRadius="20" Padding="25" HasShadow="True">
                 <VerticalStackLayout Spacing="10">
@@ -26,8 +34,11 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <Button Text="Редагувати" Command="{Binding GoToEditCommand}" BackgroundColor="#FBC4AB" TextColor="#6D5953" CornerRadius="12" HeightRequest="55" FontAttributes="Bold"/>
-            <Button Text="Видалити" Command="{Binding DeleteCommand}" BackgroundColor="#E5989B" TextColor="#FFFFFF" CornerRadius="12" HeightRequest="55" FontAttributes="Bold"/>
+            <Button Text="Редагувати" Command="{Binding EditCommand}" IsVisible="{Binding IsAdmin}"
+                BackgroundColor="#FBC4AB" TextColor="#6D5953" CornerRadius="12" HeightRequest="50" FontAttributes="Bold" Margin="0,20,0,0"/>
+
+            <Button Text="Видалити" Command="{Binding DeleteCommand}" IsVisible="{Binding IsAdmin}"
+                BackgroundColor="#E5989B" TextColor="#FFFFFF" CornerRadius="12" HeightRequest="50" FontAttributes="Bold" Margin="0,10,0,0"/>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

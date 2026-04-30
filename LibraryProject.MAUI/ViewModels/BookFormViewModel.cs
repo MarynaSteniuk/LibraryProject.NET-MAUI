@@ -27,6 +27,13 @@ public class BookFormViewModel : BaseViewModel
         set { _bookTitle = value; OnPropertyChanged(); }
     }
 
+    private string _imageUrl = string.Empty;
+    public string ImageUrl
+    {
+        get => _imageUrl;
+        set { _imageUrl = value; OnPropertyChanged(); }
+    }
+
     private string _isbn = string.Empty;
     public string Isbn
     {
@@ -87,6 +94,7 @@ public class BookFormViewModel : BaseViewModel
                 Price = book.Price;
                 AuthorId = book.AuthorId;
                 SelectedAuthor = Authors.FirstOrDefault(a => a.Id == book.AuthorId);
+                ImageUrl = book.ImageUrl ?? string.Empty;
             }
         }
         finally
@@ -112,7 +120,8 @@ public class BookFormViewModel : BaseViewModel
                 Title = BookTitle,
                 Isbn = Isbn,
                 Price = Price,
-                AuthorId = AuthorId
+                AuthorId = AuthorId,
+                ImageUrl = ImageUrl
             };
 
             if (BookId == 0)

@@ -23,6 +23,7 @@ public abstract class BaseViewModel : INotifyPropertyChanged
         }
     }
     public bool IsNotBusy => !IsBusy;
+    public bool IsAdmin => Microsoft.Maui.Storage.Preferences.Default.Get("is_admin", false);
     private string _title = string.Empty;
     public string Title
     {

@@ -57,16 +57,18 @@ public class RegisterViewModel : BaseViewModel
         IsBusy = true;
         try
         {
-            var success = await _apiService.RegisterAsync(Email, Password);
-            if (success)
+            var result = await _apiService.RegisterAsync(Email, Password);
+
+            if (result.IsSuccess)
             {
                 Preferences.Default.Set("user_email", Email);
+
                 await Shell.Current.DisplayAlert("Успіх", "Реєстрація успішна! Тепер увійдіть.", "ОК");
-                await Shell.Current.GoToAsync(".."); // Повертаємось на логін
+                await Shell.Current.GoToAsync("..");
             }
             else
             {
-                await Shell.Current.DisplayAlert("Помилка", "Не вдалося зареєструватися (можливо email вже існує)", "ОК");
+                await Shell.Current.DisplayAlert("Помилка реєстрації", result.ErrorMessage, "ОК");
             }
         }
         finally { IsBusy = false; }

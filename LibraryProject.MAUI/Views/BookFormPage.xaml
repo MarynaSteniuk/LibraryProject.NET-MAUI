@@ -27,6 +27,9 @@
                         TitleColor="#A3918E" 
                         Margin="10,5"/>
             </Frame>
+            <Label Text="Обкладинка (посилання з інтернету)" TextColor="#6D5953" FontAttributes="Bold" Margin="0,10,0,-5"/>
+            <Entry Text="{Binding ImageUrl, Mode=TwoWay}" Placeholder="https://..." BackgroundColor="#FFFFFF"/>
+            <Image Source="{Binding ImageUrl}" HeightRequest="150" Aspect="AspectFit" Margin="0,10,0,0"/>
 
             <Button Text="Зберегти" Command="{Binding SaveCommand}" IsEnabled="{Binding IsNotBusy}" 
                     BackgroundColor="#F8AD9D" TextColor="#FFFFFF" CornerRadius="12" HeightRequest="55" FontAttributes="Bold" Margin="0,20,0,0"/>

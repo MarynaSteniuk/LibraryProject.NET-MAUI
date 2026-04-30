@@ -2,35 +2,44 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="LibraryProject.MAUI.Views.BooksPage"
+             x:Name="booksPageRoot" 
              Title="{Binding Title}"
              BackgroundColor="#FEF5F1">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Додати" Command="{Binding GoToAddCommand}" />
+        <ToolbarItem Text="Додати" Command="{Binding GoToAddCommand}"/>
     </ContentPage.ToolbarItems>
 
     <Grid Padding="15">
-        <ActivityIndicator IsRunning="{Binding IsBusy}" 
-                           IsVisible="{Binding IsBusy}" 
-                           Color="#FBC4AB" 
-                           HorizontalOptions="Center" VerticalOptions="Center" ZIndex="1"/>
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="#FBC4AB" HorizontalOptions="Center" VerticalOptions="Center" ZIndex="1"/>
 
         <CollectionView ItemsSource="{Binding Books}" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Margin="0,0,0,15" Padding="15" CornerRadius="20" 
-                           BackgroundColor="#FFFFFF" BorderColor="#FBC4AB" HasShadow="True">
+                    <Frame Margin="0,0,0,12" Padding="15" CornerRadius="15" BackgroundColor="#FFFFFF" BorderColor="#FBC4AB" HasShadow="True">
 
                         <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.GoToDetailCommand}" 
-                                                  CommandParameter="{Binding .}" />
+                            <TapGestureRecognizer Command="{Binding BindingContext.GoToDetailsCommand, Source={x:Reference booksPageRoot}}" CommandParameter="{Binding .}"/>
                         </Frame.GestureRecognizers>
 
-                        <VerticalStackLayout>
-                            <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" TextColor="#6D5953"/>
-                            <Label Text="{Binding Isbn, StringFormat='ISBN: {0}'}" FontSize="14" TextColor="#A3918E" Margin="0,5,0,0"/>
-                            <Label Text="{Binding Price, StringFormat='{0} грн'}" FontSize="17" TextColor="#F8AD9D" FontAttributes="Bold" HorizontalOptions="End"/>
-                        </VerticalStackLayout>
+                        <Grid ColumnDefinitions="90, *, 40" ColumnSpacing="15">
+
+                            <Frame Grid.Column="0" WidthRequest="90" HeightRequest="130" CornerRadius="8" Padding="0" BackgroundColor="#F8EDEB" BorderColor="Transparent" IsClippedToBounds="True">
+                                <Grid>
+                                    <Label Text="📷" FontSize="35" HorizontalOptions="Center" VerticalOptions="Center" TextColor="#A3918E"/>
+                                    <Image Source="{Binding ImageUrl}" Aspect="AspectFill"/>
+                                </Grid>
+                            </Frame>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="5" VerticalOptions="Center">
+                                <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" TextColor="#6D5953"/>
+                                <Label Text="{Binding AuthorName}" FontSize="14" TextColor="#A3918E"/>
+                                <Label Text="{Binding Price, StringFormat='Ціна: {0} грн'}" FontSize="14" FontAttributes="Bold" TextColor="#E5989B"/>
+                            </VerticalStackLayout>
+
+                            <Button Grid.Column="2" Text="{Binding HeartIcon}" TextColor="{Binding HeartColor}" BackgroundColor="Transparent" FontSize="32" Padding="0" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="45" WidthRequest="40" Command="{Binding BindingContext.ToggleFavoriteCommand, Source={x:Reference booksPageRoot}}" CommandParameter="{Binding .}"/>
+
+                        </Grid>
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

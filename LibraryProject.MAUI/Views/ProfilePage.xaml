@@ -2,27 +2,70 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="LibraryProject.MAUI.Views.ProfilePage"
+             x:Name="profilePageRoot"
              Title="{Binding Title}"
              BackgroundColor="#FEF5F1">
 
-    <VerticalStackLayout Spacing="25" Padding="30" VerticalOptions="Center">
+    <Grid RowDefinitions="Auto, Auto, *" Padding="20">
 
-        <Frame BackgroundColor="#F8AD9D" WidthRequest="120" HeightRequest="120" CornerRadius="60" 
-               HorizontalOptions="Center" HasShadow="True" BorderColor="Transparent" Padding="0">
-            <Label Text="👤" FontSize="60" HorizontalOptions="Center" VerticalOptions="Center" TextColor="#FFFFFF"/>
-        </Frame>
+        <!-- БЛОК 1: Інформація профілю (Верх) -->
+        <VerticalStackLayout Grid.Row="0" Spacing="15" Margin="0,0,0,20">
+            <Frame BackgroundColor="#F8AD9D" WidthRequest="100" HeightRequest="100" CornerRadius="50" 
+                   HorizontalOptions="Center" HasShadow="True" BorderColor="Transparent" Padding="0">
+                <Label Text="👤" FontSize="50" HorizontalOptions="Center" VerticalOptions="Center" TextColor="#FFFFFF"/>
+            </Frame>
 
-        <Label Text="Ваш акаунт" FontSize="24" FontAttributes="Bold" TextColor="#6D5953" HorizontalOptions="Center"/>
+            <Label Text="Ваш акаунт" FontSize="22" FontAttributes="Bold" TextColor="#6D5953" HorizontalOptions="Center"/>
 
-        <Frame BackgroundColor="#FFFFFF" BorderColor="#FBC4AB" CornerRadius="15" Padding="20" HasShadow="False">
-            <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                <Label Text="Поточний Email:" FontSize="14" TextColor="#A3918E" HorizontalOptions="Center"/>
-                <Label Text="{Binding UserEmail}" FontSize="18" FontAttributes="Bold" TextColor="#6D5953" HorizontalOptions="Center"/>
-            </VerticalStackLayout>
-        </Frame>
+            <Frame BackgroundColor="#FFFFFF" BorderColor="#FBC4AB" CornerRadius="15" Padding="15" HasShadow="False">
+                <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
+                    <Label Text="Поточний Email:" FontSize="14" TextColor="#A3918E" HorizontalOptions="Center"/>
+                    <Label Text="{Binding UserEmail}" FontSize="16" FontAttributes="Bold" TextColor="#6D5953" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
 
-        <Button Text="Вийти з акаунту" Command="{Binding LogoutCommand}"
-                BackgroundColor="#E5989B" TextColor="#FFFFFF" CornerRadius="12" HeightRequest="55" FontAttributes="Bold" Margin="0,20,0,0"/>
+            <Button Text="Вийти з акаунту" Command="{Binding LogoutCommand}"
+                    BackgroundColor="#E5989B" TextColor="#FFFFFF" CornerRadius="12" HeightRequest="45" FontAttributes="Bold"/>
+        </VerticalStackLayout>
 
-    </VerticalStackLayout>
+        <!-- БЛОК 2: Заголовок списку -->
+        <Label Grid.Row="1" Text="Улюблені книги ❤️" FontSize="20" FontAttributes="Bold" TextColor="#6D5953" Margin="0,0,0,10"/>
+
+        <!-- БЛОК 3: Список улюблених книг (Низ) -->
+        <CollectionView Grid.Row="2" ItemsSource="{Binding FavoriteBooks}" SelectionMode="None">
+
+            <!-- Показуємо це, якщо список порожній -->
+            <CollectionView.EmptyView>
+                <Label Text="Тут поки порожньо. Додайте книги з каталогу!" 
+                       TextColor="#A3918E" HorizontalOptions="Center" Margin="0,20,0,0"/>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,0,0,10" Padding="10" CornerRadius="12" BackgroundColor="#FFFFFF" BorderColor="#FBC4AB" HasShadow="True">
+
+                        <!-- МАГІЯ КЛІКУ -->
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer 
+                                Command="{Binding BindingContext.GoToDetailsCommand, Source={x:Reference profilePageRoot}}"
+                                CommandParameter="{Binding .}" />
+                        </Frame.GestureRecognizers>
+
+                        <Grid ColumnDefinitions="60, *" ColumnSpacing="15">
+                            <Frame Grid.Column="0" WidthRequest="60" HeightRequest="90" CornerRadius="6" Padding="0" BackgroundColor="#F8EDEB" BorderColor="Transparent" IsClippedToBounds="True">
+                                <Grid>
+                                    <Label Text="📷" FontSize="25" HorizontalOptions="Center" VerticalOptions="Center" TextColor="#A3918E"/>
+                                    <Image Source="{Binding ImageUrl}" Aspect="AspectFill"/>
+                                </Grid>
+                            </Frame>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="{Binding Title}" FontSize="16" FontAttributes="Bold" TextColor="#6D5953"/>
+                                <Label Text="{Binding AuthorName}" FontSize="12" TextColor="#A3918E"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>

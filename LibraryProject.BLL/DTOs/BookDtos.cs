@@ -10,6 +10,7 @@ public class BookDto
     public decimal Price { get; set; }
     public int AuthorId { get; set; }
     public string AuthorName { get; set; } = string.Empty;
+    public string? ImageUrl { get; set; }
 }
 
 public class CreateBookDto
@@ -28,6 +29,9 @@ public class CreateBookDto
 
     [Required]
     public int AuthorId { get; set; }
+
+    [MaxLength(1000)]
+    public string? ImageUrl { get; set; }
 }
 
 public class UpdateBookDto
@@ -46,4 +50,7 @@ public class UpdateBookDto
 
     [Required]
     public int AuthorId { get; set; }
+
+    [MaxLength(1000)]
+    public string? ImageUrl { get; set; }
 }

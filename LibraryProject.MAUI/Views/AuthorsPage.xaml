@@ -33,17 +33,12 @@
                        TextColor="#A3918E"/>
                             </VerticalStackLayout>
 
-                            <Button Grid.Column="1" 
-                    Text="X" 
-                    BackgroundColor="#E5989B" 
-                    TextColor="#FFFFFF" 
-                    WidthRequest="40" 
-                    HeightRequest="40" 
-                    CornerRadius="20" 
-                    FontAttributes="Bold"
-                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}" 
-                    CommandParameter="{Binding .}"
-                    VerticalOptions="Center"/>
+                            <Button Grid.Column="1" Text="X" BackgroundColor="#E5989B" TextColor="#FFFFFF" 
+            WidthRequest="40" HeightRequest="40" CornerRadius="20" FontAttributes="Bold"
+            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}" 
+            CommandParameter="{Binding .}"
+            IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.IsAdmin}"
+            VerticalOptions="Center"/>
                         </Grid>
                     </Frame>
                 </DataTemplate>

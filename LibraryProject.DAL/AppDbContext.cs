@@ -20,6 +20,7 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
 
     public DbSet<Book> Books { get; set; }
     public DbSet<Author> Authors { get; set; }
+    public DbSet<FavoriteBook> FavoriteBooks { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

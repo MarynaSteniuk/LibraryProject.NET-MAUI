@@ -5,7 +5,7 @@ namespace LibraryProject.MAUI.Services;
 public interface ILibraryApiService
 {
     Task<bool> LoginAsync(string email, string password);
-    Task<bool> RegisterAsync(string email, string password);
+    Task<(bool IsSuccess, string ErrorMessage)> RegisterAsync(string email, string password);
     Task InitializeAuthAsync();
     Task<IEnumerable<BookModel>> GetAllAsync();
     Task<BookModel?> GetByIdAsync(int id);
@@ -17,4 +17,6 @@ public interface ILibraryApiService
     Task<AuthorModel?> CreateAuthorAsync(AuthorModel item);
     Task UpdateAuthorAsync(AuthorModel item);
     Task DeleteAuthorAsync(int id);
+    Task<bool> ToggleFavoriteAsync(string email, int bookId);
+    Task<IEnumerable<Models.BookModel>> GetFavoriteBooksAsync(string email);
 }

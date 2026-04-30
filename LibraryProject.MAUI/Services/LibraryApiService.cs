@@ -157,10 +157,8 @@ public class LibraryApiService : ILibraryApiService
 
     public async Task InitializeAuthAsync()
     {
-        // Дістаємо токен із захищеного сховища телефону
         var token = await SecureStorage.Default.GetAsync("auth_token");
 
-        // Якщо токен є, вішаємо його на наш HttpClient як "перепустку"
         if (!string.IsNullOrWhiteSpace(token))
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -193,16 +191,79 @@ public class LibraryApiService : ILibraryApiService
             return false;
         }
     }
-    public async Task<bool> RegisterAsync(string email, string password)
+    public async Task<(bool IsSuccess, string ErrorMessage)> RegisterAsync(string email, string password)
     {
         try
         {
             var response = await _httpClient.PostAsJsonAsync("api/Auth/register", new { Email = email, Password = password });
-            return response.IsSuccessStatusCode;
+
+            if (response.IsSuccessStatusCode)
+            {
+                return (true, string.Empty); 
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+
+                string errorMessage = "Не вдалося зареєструватися. Перевірте дані.";
+
+                if (errorContent.Contains("Password"))
+                {
+                    errorMessage = "Пароль занадто простий! Він має містити мінімум 6 символів, хоча б одну велику літеру, цифру та спеціальний символ (!, ?, #).";
+                }
+                else if (errorContent.Contains("DuplicateUserName") || errorContent.Contains("already taken"))
+                {
+                    errorMessage = "Користувач з таким Email вже існує. Спробуйте увійти.";
+                }
+                else if (errorContent.Contains("Email"))
+                {
+                    errorMessage = "Некоректний формат Email адреси.";
+                }
+
+                return (false, errorMessage); 
+            }
         }
-        catch (Exception)
+        catch (Exception ex)
+        {
+            return (false, $"Помилка підключення до сервера: {ex.Message}");
+        }
+    }
+    public async Task<bool> ToggleFavoriteAsync(string email, int bookId)
+    {
+        try
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/Favorites/toggle", new { Email = email, BookId = bookId });
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<FavoriteResult>();
+                return result?.IsFavorite ?? false;
+            }
+            return false;
+        }
+        catch
         {
             return false;
         }
+    }
+
+    public async Task<IEnumerable<Models.BookModel>> GetFavoriteBooksAsync(string email)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"api/Favorites/{email}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<List<Models.BookModel>>() ?? new List<Models.BookModel>();
+            }
+            return new List<Models.BookModel>();
+        }
+        catch
+        {
+            return new List<Models.BookModel>();
+        }
+    }
+    private class FavoriteResult
+    {
+        public bool IsFavorite { get; set; }
     }
 }

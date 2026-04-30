@@ -17,7 +17,7 @@ public class BookDetailViewModel : BaseViewModel
         set
         {
             _bookId = value;
-            _ = LoadBookAsync(value); 
+            _ = LoadBookAsync(value);
         }
     }
 
@@ -42,8 +42,25 @@ public class BookDetailViewModel : BaseViewModel
         set { _price = value; OnPropertyChanged(); }
     }
 
+    private string _authorName = string.Empty;
+    public string AuthorName
+    {
+        get => _authorName;
+        set { _authorName = value; OnPropertyChanged(); }
+    }
+
+    // ДОДАНО: Властивість для відображення картинки
+    private string _imageUrl = string.Empty;
+    public string ImageUrl
+    {
+        get => _imageUrl;
+        set { _imageUrl = value; OnPropertyChanged(); }
+    }
+
     public ICommand DeleteCommand { get; }
-    public ICommand GoToEditCommand { get; }
+
+    // ВИПРАВЛЕНО: Назву змінено на EditCommand, як у XAML
+    public ICommand EditCommand { get; }
 
     public BookDetailViewModel(ILibraryApiService apiService)
     {
@@ -51,14 +68,9 @@ public class BookDetailViewModel : BaseViewModel
         Title = "Деталі книги";
 
         DeleteCommand = new Command(async () => await DeleteBookAsync());
-        GoToEditCommand = new Command(async () => await GoToEditAsync());
+        EditCommand = new Command(async () => await EditAsync());
     }
-    private string _authorName = string.Empty;
-    public string AuthorName
-    {
-        get => _authorName;
-        set { _authorName = value; OnPropertyChanged(); }
-    }
+
     private async Task LoadBookAsync(int id)
     {
         IsBusy = true;
@@ -70,6 +82,7 @@ public class BookDetailViewModel : BaseViewModel
                 BookTitle = _currentBook.Title;
                 Isbn = _currentBook.Isbn;
                 Price = _currentBook.Price;
+                ImageUrl = _currentBook.ImageUrl ?? string.Empty;
 
                 var authors = await _apiService.GetAuthorsAsync();
                 var author = authors.FirstOrDefault(a => a.Id == _currentBook.AuthorId);
@@ -92,15 +105,14 @@ public class BookDetailViewModel : BaseViewModel
         try
         {
             await _apiService.DeleteAsync(_currentBook.Id);
-            await Shell.Current.GoToAsync(".."); 
+            await Shell.Current.GoToAsync("..");
         }
         finally
         {
             IsBusy = false;
         }
     }
-
-    private async Task GoToEditAsync()
+    private async Task EditAsync()
     {
         if (_currentBook == null) return;
         await Shell.Current.GoToAsync($"BookFormPage?id={_currentBook.Id}");

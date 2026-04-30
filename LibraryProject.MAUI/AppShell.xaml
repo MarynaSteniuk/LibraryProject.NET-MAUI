@@ -3,13 +3,23 @@
     x:Class="LibraryProject.MAUI.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:LibraryProject.MAUI"
-    xmlns:views="clr-namespace:LibraryProject.MAUI.Views"
-    Title="LibraryProject.MAUI">
+    xmlns:local="clr-namespace:LibraryProject.MAUI.Views"
+    Shell.FlyoutBehavior="Flyout">
 
-    <ShellContent
-        Title="Каталог Книг"
-        ContentTemplate="{DataTemplate views:BooksPage}"
-        Route="BooksPage" />
+    <ShellItem FlyoutItemIsVisible="False">
+        <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate local:LoginPage}" />
+    </ShellItem>
+
+    <FlyoutItem Title="Каталог Книг">
+        <ShellContent Route="BooksPage" ContentTemplate="{DataTemplate local:BooksPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Автори">
+        <ShellContent Route="AuthorsPage" ContentTemplate="{DataTemplate local:AuthorsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Мій профіль">
+        <ShellContent Route="ProfilePage" ContentTemplate="{DataTemplate local:ProfilePage}" />
+    </FlyoutItem>
 
 </Shell>

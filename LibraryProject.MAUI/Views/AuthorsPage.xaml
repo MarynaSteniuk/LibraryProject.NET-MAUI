@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LibraryProject.MAUI.Views.AuthorsPage"
+             Title="{Binding Title}"
+             BackgroundColor="#FEF5F1">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Додати" Command="{Binding GoToAddCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid Padding="15">
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="#FBC4AB" HorizontalOptions="Center" VerticalOptions="Center" ZIndex="1"/>
+
+        <CollectionView ItemsSource="{Binding Authors}" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,0,0,12" Padding="20" CornerRadius="15" BackgroundColor="#FFFFFF" BorderColor="#FBC4AB" HasShadow="True">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <!-- Додаємо Spacing="5", щоб текст не наїжджав один на одного -->
+                            <VerticalStackLayout Grid.Column="0" Spacing="5" VerticalOptions="Center">
+                                <Label Text="{Binding Name}" 
+                       FontSize="18" 
+                       FontAttributes="Bold" 
+                       TextColor="#6D5953"/>
+
+                                <Label Text="{Binding Nationality, StringFormat='Громадянство: {0}'}" 
+                       FontSize="14" 
+                       TextColor="#A3918E"/>
+
+                                <Label Text="{Binding BirthDate, StringFormat='Дата народження: {0:dd.MM.yyyy}'}" 
+                       FontSize="14" 
+                       TextColor="#A3918E"/>
+                            </VerticalStackLayout>
+
+                            <Button Grid.Column="1" 
+                    Text="X" 
+                    BackgroundColor="#E5989B" 
+                    TextColor="#FFFFFF" 
+                    WidthRequest="40" 
+                    HeightRequest="40" 
+                    CornerRadius="20" 
+                    FontAttributes="Bold"
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}" 
+                    CommandParameter="{Binding .}"
+                    VerticalOptions="Center"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
